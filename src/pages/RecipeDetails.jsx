@@ -12,49 +12,51 @@ const RecipeDetails = () => {
     const { data, setdata } = useContext(recipecontext);
 
     const recipe = data.find((recipe) => recipe.id === params.id);
-    const { id, image, title, category, instructions, ingredients, chef } = recipe;
+
 
     const { register, handleSubmit } = useForm({
         defaultValues: {
-            title: title,
-            image: image,
-            category: category,
-            instructions: instructions,
-            ingredients: ingredients,
-            chef: chef
+            title: recipe?.title,
+            image: recipe?.image,
+            category: recipe?.category,
+            instructions: recipe?.instructions,
+            ingredients: recipe?.ingredients,
+            chef: recipe?.chef
         }
     });
 
     const UpdateHandler = (recipe) => {
         const index = data.findIndex((recipe) => recipe.id === params.id);
-        console.log(index);
         let copyData = [...data];
         copyData[index] = { ...copyData[index], ...recipe };
         setdata(copyData);
+        localStorage.setItem("recipes", JSON.stringify(copyData));
+
         toast.success("Recipe updated successfully.");
     }
 
 
     const DeleteHandler = () => {
         const filteredData = data.filter((r) => r.id != params.id);
-        console.log(filteredData);
         setdata(filteredData);
+        localStorage.setItem("recipes", JSON.stringify(filteredData));
+
         toast.success("Recipe deleted successfully.");
         navigate("/recipes");
     }
 
 
     return (
-        <div key={id} className='block h-[100%] w-[100vw] flex' >
+        <div key={recipe?.id} className='block h-[100%] w-[100vw] flex' >
             <div className="left flex flex-1 flex-col p-2 gap-5 bg-gray-300 border-2 border-rose-900">
 
-                <img className="h-100 w-200 object-cover object-center" src={image} alt="image" />
+                <img className="h-100 w-200 object-cover object-center" src={recipe?.image} alt="image" />
                 <div className="flex flex-col ">
-                    <h1 className="text-3xl font-bold text-rose-600">{title} Recipe</h1>
-                    <h3 className="font-normal text-gray-700 text-black">Category: {category}</h3>
-                    <p className="text-normal text-rose-700">Instructions: {instructions}</p>
-                    <p className="text-m  text-gray-900">Ingredients: {ingredients}</p>
-                    <h5 className="font-medium py-2 text-gray-900">Written By: {chef}</h5>
+                    <h1 className="text-3xl font-bold text-rose-600">{recipe?.title} Recipe</h1>
+                    <h3 className="font-normal text-gray-700 text-black">Category: {recipe?.category}</h3>
+                    <p className="text-normal text-rose-700">Instructions: {recipe?.instructions}</p>
+                    <p className="text-m  text-gray-900">Ingredients: {recipe?.ingredients}</p>
+                    <h5 className="font-medium py-2 text-gray-900">Written By: {recipe?.chef}</h5>
                 </div>
             </div>
             <div className="left flex flex-1 flex-col p-2 gap-5  bg-gray-950 border-2 border-rose-900">
